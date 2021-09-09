@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import fc.desafio.tecnico.rest.domain.annotation.ValueField;
 import fc.desafio.tecnico.rest.domain.entity.Terminal;
 
 @SpringBootTest
@@ -62,17 +61,19 @@ public class TerminalServiceTest {
 	
 	@Test
 	void shouldBeTransformValidTerminalInEntity() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, JSONException {
-		String validRaw= "{logic:44332211,serial:'123',model:PWWIN,sam:0,ptid:F04A2E4088B,plat:4,version:8.00b3,mxr:0,mxf:16777216,verfm:PWWIN}";
+		String validRaw= "{logic:44332211,serial:'123',model:PWWIN,ptid:F04A2E4088B,plat:4,version:8.00b3,mxr:0,mxf:16777216,verfm:PWWIN}";
 		JSONObject jsonObject = new JSONObject(validRaw);
 		
 		Terminal terminal = new Terminal();
 		Field[] modelFields = terminal.getClass().getDeclaredFields();
 		
 		for (int i = 0; i < modelFields.length; i++) {
-			modelFields[i].setAccessible(true);
-			System.out.println(modelFields[i].getName());
-			modelFields[i].set(terminal, jsonObject.get(keys[i]));
-			modelFields[i].setAccessible(false);
+			if(jsonObject.has(keys[i])) {
+				modelFields[i].setAccessible(true);
+				System.out.println(modelFields[i].getName());
+				modelFields[i].set(terminal, jsonObject.get(keys[i]));
+				modelFields[i].setAccessible(false);	
+			}
 		}
 		System.out.println(terminal);
 		
