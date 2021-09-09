@@ -22,7 +22,7 @@ import fc.desafio.tecnico.rest.domain.entity.Terminal;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TerminalServiceTest {
+public class CreateTerminalServiceTest {
 
 	static final String[] keys = {"logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf", "verfm"};
 	
