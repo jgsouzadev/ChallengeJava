@@ -2,17 +2,15 @@ package fc.desafio.tecnico.rest.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
-import org.assertj.core.util.Arrays;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.jupiter.api.Assertions;
@@ -20,17 +18,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import fc.desafio.tecnico.rest.domain.annotation.ValueField;
+import fc.desafio.tecnico.rest.domain.entity.Terminal;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TerminalServiceTest {
 
-	static final String[] keys = {"logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf", "VERFM"};
+	static final String[] keys = {"logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf", "verfm"};
 	
 	@Test
-	void shouldBeReceiveATerminalAndSave() throws IOException, ValidationException {
+	void shouldBeReceiveATerminalAndValid() throws IOException, ValidationException {
 		String textOrig = "44332211;'123';PWWIN;0;F04A2E4088B;4;8.00b3;0;16777216;PWWIN";
 
 		List<Integer> stringNumbers = new ArrayList<>();
@@ -61,5 +59,25 @@ public class TerminalServiceTest {
 			schema.validate(jsonObject);	
 		});
 	}
+	
+	@Test
+	void shouldBeTransformValidTerminalInEntity() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, JSONException {
+		String validRaw= "{logic:44332211,serial:'123',model:PWWIN,sam:0,ptid:F04A2E4088B,plat:4,version:8.00b3,mxr:0,mxf:16777216,verfm:PWWIN}";
+		JSONObject jsonObject = new JSONObject(validRaw);
+		
+		Terminal terminal = new Terminal();
+		Field[] modelFields = terminal.getClass().getDeclaredFields();
+		
+		for (int i = 0; i < modelFields.length; i++) {
+			modelFields[i].setAccessible(true);
+			System.out.println(modelFields[i].getName());
+			modelFields[i].set(terminal, jsonObject.get(keys[i]));
+			modelFields[i].setAccessible(false);
+		}
+		System.out.println(terminal);
+		
+		Assertions.assertEquals(terminal.getLogic(), 44332211);
+	}
+	
 
 }
