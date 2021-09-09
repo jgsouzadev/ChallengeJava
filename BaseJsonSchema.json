@@ -1,11 +1,16 @@
 {
+	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "Terminal",
 	"type": "object",
+	"required": ["logic", "serial", "model", "version"],
 	"properties": {
 		"logic": {
 			"type": "integer"
 		},
 		"serial": {
+			"type": "string"
+		},
+		"model": {
 			"type": "string"
 		},
 		"sam": {
@@ -21,17 +26,14 @@
 		"version": {
 			"type": "string"
 		},
+		"mxf": {
+			"type": "integer"
+		},
 		"mxr": {
 			"type": "integer"
 		},
 		"VERFM": {
 			"type": "string"
 		}
-	},
-	"required": [
-		"logic",
-		"serial",
-		"model",
-		"version"
-	]
+	}
 }
