@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EndpointParaODesafioApplication {
+public class TerminalChallenge {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EndpointParaODesafioApplication.class, args);
+		SpringApplication.run(TerminalChallenge.class, args);
 	}
 
 }
