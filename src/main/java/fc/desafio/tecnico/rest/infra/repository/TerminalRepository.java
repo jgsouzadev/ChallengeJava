@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import fc.desafio.tecnico.rest.domain.entity.Terminal;
 
 @Repository
-interface TerminalRepository extends JpaRepository<Terminal, Integer>{
+public interface TerminalRepository extends JpaRepository<Terminal, Integer>{
 
 }
