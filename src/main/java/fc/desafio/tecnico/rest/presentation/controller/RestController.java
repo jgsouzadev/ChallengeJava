@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @org.springframework.web.bind.annotation.RestController
-@RequestMapping("/api")
+@RequestMapping(path = "${env.api.version}/terminal")
 public class RestController {
-
+		
 	@PostMapping(consumes = MediaType.TEXT_HTML_VALUE)
 	public void endpoint(@RequestBody String data) {
 		System.out.println(data);
