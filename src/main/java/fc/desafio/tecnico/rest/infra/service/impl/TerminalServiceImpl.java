@@ -91,7 +91,6 @@ public class TerminalServiceImpl implements TerminalService {
 			JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
 			schema = SchemaLoader.load(rawSchema);
 		} catch (Exception e) {
-			log.info("não passou" + e.getLocalizedMessage());
 			log.info(e.getMessage());
 			throw e;
 		}
