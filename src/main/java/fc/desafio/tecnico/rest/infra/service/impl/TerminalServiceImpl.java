@@ -46,9 +46,10 @@ public class TerminalServiceImpl implements TerminalService {
 		try {
 			JSONObject jsonObject = new JSONObject(this.transformRawTextInJSONObject(text));
 			Terminal terminal = this.createTerminalObject(jsonObject);
-			validarSeJaFoiCadastrado(terminal.getLogic());
 			Schema schema = this.loadAndReturnSchema();
 			schema.validate(jsonObject);
+			validarSeJaFoiCadastrado(terminal.getLogic());
+			
 			terminalRepository.save(terminal);
 		} catch (ValidationException e) {
 			log.error(e.getLocalizedMessage());
@@ -87,7 +88,6 @@ public class TerminalServiceImpl implements TerminalService {
 		Schema schema = null;
 		File jsonSchemaFile = new File(JSON_SCHEMA_URL);
 		try (InputStream inputStream = new FileInputStream(jsonSchemaFile)) {
-			log.info(jsonSchemaFile.getAbsolutePath());
 			JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
 			schema = SchemaLoader.load(rawSchema);
 		} catch (Exception e) {
