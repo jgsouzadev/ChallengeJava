@@ -1,5 +1,7 @@
 package fc.desafio.tecnico.rest.infra.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -83,8 +85,9 @@ public class TerminalServiceImpl implements TerminalService {
 
 	private Schema loadAndReturnSchema() throws IOException, ValidationException {
 		Schema schema = null;
-
-		try (InputStream inputStream = getClass().getResourceAsStream(JSON_SCHEMA_URL)) {
+		File jsonSchemaFile = new File("./".concat(JSON_SCHEMA_URL));
+		try (InputStream inputStream = new FileInputStream(jsonSchemaFile)) {
+			log.info(jsonSchemaFile.getAbsolutePath());
 			JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
 			schema = SchemaLoader.load(rawSchema);
 		} catch (Exception e) {
@@ -98,7 +101,7 @@ public class TerminalServiceImpl implements TerminalService {
 
 	private Terminal createTerminalObject(JSONObject jsonObject)
 			throws IllegalArgumentException, IllegalAccessException, JSONException {
-		
+
 		Terminal terminal = new Terminal();
 		Field[] modelFields = terminal.getClass().getDeclaredFields();
 
@@ -111,11 +114,11 @@ public class TerminalServiceImpl implements TerminalService {
 		}
 		return terminal;
 	}
-	
+
 	private void validarSeJaFoiCadastrado(Integer logic) {
 		Optional<Terminal> terminal = terminalRepository.findByLogic(logic);
-		
-		if(terminal.isPresent())
+
+		if (terminal.isPresent())
 			throw new IllegalArgumentException("Já existe um Terminal cadastrado com esse logic");
 	}
 
