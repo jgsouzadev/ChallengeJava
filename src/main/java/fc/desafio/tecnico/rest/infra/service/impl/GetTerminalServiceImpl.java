@@ -1,7 +1,5 @@
 package fc.desafio.tecnico.rest.infra.service.impl;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import fc.desafio.tecnico.rest.domain.entity.Terminal;
@@ -18,14 +16,8 @@ public class GetTerminalServiceImpl implements GetTerminalService {
 
 	@Override
 	public Terminal getTerminalData(Integer logic) throws NotFoundException {
-		Optional<Terminal> terminal = terminalRepository.findByLogic(logic);
-
-		if (terminal.isPresent()) {
-			return terminal.get();
-		} else {
-			throw new NotFoundException("Não foi encontrado algum terminal com esse logic");
-		}
-
+		return terminalRepository.findByLogic(logic).orElseThrow(
+				() -> new NotFoundException("Não foi encontrado algum terminal com esse logic"));
 	}
 
 }
