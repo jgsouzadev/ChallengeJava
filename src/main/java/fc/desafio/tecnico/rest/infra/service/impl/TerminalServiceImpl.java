@@ -45,9 +45,9 @@ public class TerminalServiceImpl implements TerminalService {
 	public void storeTerminal(String text) throws Exception {
 		try {
 			JSONObject jsonObject = new JSONObject(this.transformRawTextInJSONObject(text));
-			Terminal terminal = this.createTerminalObject(jsonObject);
 			Schema schema = this.loadAndReturnSchema();
 			schema.validate(jsonObject);
+			Terminal terminal = this.createTerminalObject(jsonObject);
 			validarSeJaFoiCadastrado(terminal.getLogic());
 			
 			terminalRepository.save(terminal);
