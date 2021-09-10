@@ -23,7 +23,7 @@ public class TerminalDTO {
 	@JsonProperty(value = "VERMF")
 	private String vermf;
 
-	public Terminal conversorDTO(TerminalDTO terminalDTO) {
+	public Terminal converterEmModel(TerminalDTO terminalDTO) {
 		return Terminal.builder().withSerial(terminalDTO.getSerial()).withModel(terminalDTO.getModel())
 				.withMxf(terminalDTO.getMxf()).withMxr(terminalDTO.getMxr()).withPlat(terminalDTO.getPlat())
 				.withPtid(terminalDTO.getPtid()).withVersion(terminalDTO.getVersion()).withVermf(terminalDTO.getVermf())
