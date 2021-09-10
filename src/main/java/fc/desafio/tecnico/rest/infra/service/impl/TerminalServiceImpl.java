@@ -3,6 +3,7 @@ package fc.desafio.tecnico.rest.infra.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
@@ -15,24 +16,21 @@ import org.springframework.stereotype.Service;
 import fc.desafio.tecnico.rest.domain.entity.Terminal;
 import fc.desafio.tecnico.rest.infra.repository.TerminalRepository;
 import fc.desafio.tecnico.rest.infra.service.TerminalService;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TerminalServiceImpl implements TerminalService {
 
 	static final String[] keys = { "logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf",
 			"VERFM" };
 
-	static final String JSON_SCHEMA_URL = "/BaseJsonSchema.json";
+	static final String JSON_SCHEMA_URL = "BaseJsonSchema.json";
 
 	private final TerminalRepository terminalRepository;
-
-	@Override
-	public void getTerminalData(Integer logic) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void storeTerminal(String text) throws Exception {
@@ -42,14 +40,13 @@ public class TerminalServiceImpl implements TerminalService {
 			schema.validate(jsonObject);
 			terminalRepository.save(this.createTerminalObject(jsonObject));
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Não foi possivel adicionar o Terminal");
+			throw new IllegalArgumentException("Não foi possivel adicionar o Terminal" + e.getLocalizedMessage());
 		}
 	}
 
 	@Override
-	public void updateTerminal(Integer logic, String newData) {
-		// TODO Auto-generated method stub
-
+	public void updateTerminal(Integer logic, TerminalDTO terminalDTO) {
+		
 	}
 
 	private String transformRawTextInJSONObject(String text) {
@@ -91,7 +88,6 @@ public class TerminalServiceImpl implements TerminalService {
 			}
 		}
 		return terminal;
-
 	}
 
 }
