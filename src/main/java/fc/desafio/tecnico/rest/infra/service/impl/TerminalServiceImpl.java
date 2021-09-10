@@ -14,15 +14,16 @@ import org.json.JSONTokener;
 import org.springframework.stereotype.Service;
 
 import fc.desafio.tecnico.rest.domain.entity.Terminal;
+import fc.desafio.tecnico.rest.infra.dto.TerminalDTO;
 import fc.desafio.tecnico.rest.infra.repository.TerminalRepository;
+import fc.desafio.tecnico.rest.infra.service.GetTerminalService;
 import fc.desafio.tecnico.rest.infra.service.TerminalService;
+import fc.desafio.tecnico.rest.infra.util.ObjectMergeUtil;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class TerminalServiceImpl implements TerminalService {
 
 	static final String[] keys = { "logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf",
@@ -32,21 +33,34 @@ public class TerminalServiceImpl implements TerminalService {
 
 	private final TerminalRepository terminalRepository;
 
+	private final GetTerminalService getService;
+
+	private final ObjectMergeUtil objectUtil;
+
 	@Override
 	public void storeTerminal(String text) throws Exception {
 		try {
 			JSONObject jsonObject = new JSONObject(this.transformRawTextInJSONObject(text));
+			Terminal terminal = this.createTerminalObject(jsonObject);
+			validarSeJaFoiCadastrado(terminal.getLogic());
 			Schema schema = this.loadAndReturnSchema();
 			schema.validate(jsonObject);
-			terminalRepository.save(this.createTerminalObject(jsonObject));
+			terminalRepository.save(terminal);
+		} catch (ValidationException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Não foi possivel adicionar o Terminal" + e.getLocalizedMessage());
+			throw e;
 		}
 	}
 
 	@Override
-	public void updateTerminal(Integer logic, TerminalDTO terminalDTO) {
-		
+	public Terminal updateTerminal(Integer logic, TerminalDTO terminalDTO)
+			throws NotFoundException, IllegalAccessException, InstantiationException {
+		Terminal terminal = getService.getTerminalData(logic);
+
+		terminal = objectUtil.mergeObjects(terminalDTO.converterEmModel(terminalDTO), terminal);
+
+		return terminalRepository.save(terminal);
 	}
 
 	private String transformRawTextInJSONObject(String text) {
@@ -76,7 +90,7 @@ public class TerminalServiceImpl implements TerminalService {
 
 	private Terminal createTerminalObject(JSONObject jsonObject)
 			throws IllegalArgumentException, IllegalAccessException, JSONException {
-
+		
 		Terminal terminal = new Terminal();
 		Field[] modelFields = terminal.getClass().getDeclaredFields();
 
@@ -88,6 +102,13 @@ public class TerminalServiceImpl implements TerminalService {
 			}
 		}
 		return terminal;
+	}
+	
+	private void validarSeJaFoiCadastrado(Integer logic) {
+		Optional<Terminal> terminal = terminalRepository.findByLogic(logic);
+		
+		if(terminal.isPresent())
+			throw new IllegalArgumentException("Já existe um Terminal cadastrado com esse logic");
 	}
 
 }

@@ -9,11 +9,9 @@ import fc.desafio.tecnico.rest.infra.repository.TerminalRepository;
 import fc.desafio.tecnico.rest.infra.service.GetTerminalService;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class GetTerminalServiceImpl implements GetTerminalService {
 
 	private final TerminalRepository terminalRepository;
