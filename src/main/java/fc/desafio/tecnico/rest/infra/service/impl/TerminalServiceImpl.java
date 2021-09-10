@@ -85,7 +85,7 @@ public class TerminalServiceImpl implements TerminalService {
 
 	private Schema loadAndReturnSchema() throws IOException, ValidationException {
 		Schema schema = null;
-		File jsonSchemaFile = new File("/".concat(JSON_SCHEMA_URL));
+		File jsonSchemaFile = new File(JSON_SCHEMA_URL);
 		try (InputStream inputStream = new FileInputStream(jsonSchemaFile)) {
 			log.info(jsonSchemaFile.getAbsolutePath());
 			JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
