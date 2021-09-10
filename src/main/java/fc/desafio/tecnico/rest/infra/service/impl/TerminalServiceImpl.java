@@ -21,9 +21,11 @@ import fc.desafio.tecnico.rest.infra.service.TerminalService;
 import fc.desafio.tecnico.rest.infra.util.ObjectMergeUtil;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TerminalServiceImpl implements TerminalService {
 
 	static final String[] keys = { "logic", "serial", "model", "sam", "ptid", "plat", "version", "mxr", "mxf",
@@ -47,8 +49,10 @@ public class TerminalServiceImpl implements TerminalService {
 			schema.validate(jsonObject);
 			terminalRepository.save(terminal);
 		} catch (ValidationException e) {
+			log.error(e.getLocalizedMessage());
 			throw e;
 		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 			throw e;
 		}
 	}
