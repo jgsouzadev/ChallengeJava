@@ -27,7 +27,7 @@ public class Terminal {
 	private String version;
 	private Integer mxr;
 	private Integer mxf;
-	@JsonProperty(namespace = "VERMF")
+	@JsonProperty(value = "VERMF")
 	private String vermf;
 
 }
