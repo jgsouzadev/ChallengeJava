@@ -51,9 +51,6 @@ public class TerminalServiceImpl implements TerminalService {
 			validarSeJaFoiCadastrado(terminal.getLogic());
 			
 			terminalRepository.save(terminal);
-		} catch (ValidationException e) {
-			log.error(e.getLocalizedMessage());
-			throw e;
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
 			throw e;
